@@ -1,58 +1,50 @@
 #include <stdio.h>
-#include <limits.h> // Diperlukan untuk INT_MAX dan INT_MIN
-#include <float.h>  // Diperlukan untuk DBL_MAX
+#include <limits.h>
+#include <float.h>
 
 int main() {
     int n;
 
-    // Membaca jumlah baris masukan berikutnya (n)
-    scanf("%d", &n);
+    while (scanf("%d", &n) != 1 || n <= 0) {
+        while (getchar() != '\n');
+    }
 
-    // Array untuk menyimpan n bilangan bulat
-    // Alokasi dinamis atau VLA (Variable Length Array)
-    // VLA didukung di C99, namun mungkin tidak di semua compiler C++.
-    // Untuk kompabilitas maksimal, bisa menggunakan alokasi dinamis (malloc).
-    // Karena ini project C sederhana dan biasanya GCC mendukung VLA, kita gunakan VLA.
-    int numbers[n]; 
+    int arr[n];
 
-    int min_val = INT_MAX; // Inisialisasi nilai terkecil dengan nilai integer maksimum
-    int max_val = INT_MIN; // Inisialisasi nilai terbesar dengan nilai integer minimum
+    int min_val = INT_MAX;
+    int max_val = INT_MIN;
 
-    // Membaca n baris masukan berikutnya dan mencari nilai terkecil serta terbesar
     for (int i = 0; i < n; i++) {
-        scanf("%d", &numbers[i]);
-        if (numbers[i] < min_val) {
-            min_val = numbers[i];
+        int current_val;
+
+        while (scanf("%d", &current_val) != 1 || current_val < -100 || current_val > 100) {
+            while (getchar() != '\n');
         }
-        if (numbers[i] > max_val) {
-            max_val = numbers[i];
+        arr[i] = current_val;
+
+        if (current_val < min_val) {
+            min_val = current_val;
+        }
+        if (current_val > max_val) {
+            max_val = current_val;
         }
     }
 
-    double min_avg_pair = DBL_MAX; // Inisialisasi rata-rata pasangan terendah dengan nilai double maksimum
+    printf("%d\n", min_val);
+    printf("%d\n", max_val);
 
-    // Menghitung rata-rata terendah dari setiap pasangan nilai berturut-turut
-    // Perhitungan hanya dilakukan jika ada setidaknya 2 angka untuk membentuk pasangan
     if (n >= 2) {
+        double lowest_consecutive_avg = DBL_MAX;
         for (int i = 0; i < n - 1; i++) {
-            double current_avg = (double)(numbers[i] + numbers[i+1]) / 2.0;
-            if (current_avg < min_avg_pair) {
-                min_avg_pair = current_avg;
+            double current_avg = (double)(arr[i] + arr[i+1]) / 2.0;
+            if (current_avg < lowest_consecutive_avg) {
+                lowest_consecutive_avg = current_avg;
             }
         }
-    }
-
-    // Menampilkan hasil sesuai spesifikasi Tugas 2
-    printf("%d\n", min_val); // Nilai terkecil
-    printf("%d\n", max_val); // Nilai terbesar
-
-    // Menampilkan rata-rata pasangan terendah.
-    // Jika n < 2, tidak ada pasangan, maka output 0.00 sebagai penanda tidak ada rata-rata yang dapat dihitung.
-    if (n >= 2) {
-        printf("%.2f\n", min_avg_pair); // Rata-rata terendah dengan 2 digit presisi
+        printf("%.2f\n", lowest_consecutive_avg);
     } else {
-        printf("0.00\n"); // Placeholder jika tidak ada pasangan
+        printf("N/A\n");
     }
 
-    return 0; // Mengakhiri program dengan sukses
+    return 0;
 }
